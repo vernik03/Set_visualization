@@ -1,0 +1,339 @@
+﻿  ConsoleApplication6.cpp
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(125,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(140,42): warning C4244: =: преобразование "double" в "_Ty2", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(141,41): warning C4244: =: преобразование "double" в "_Ty1", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(143,18): warning C4244: =: преобразование "double" в "_Ty1", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(151,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(154,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(162,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(168,23): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(190,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(194,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(209,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(230,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(240,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(252,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(271,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(308,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(347,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(353,25): warning C4244: аргумент: преобразование "double" в "const _Ty", возможна потеря данных
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(387,22): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(392,23): warning C4244: аргумент: преобразование "double" в "const _Ty", возможна потеря данных
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(261,10): warning C4101: y: неиспользованная локальная переменная
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(261,7): warning C4101: x: неиспользованная локальная переменная
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(269,7): warning C4101: ch: неиспользованная локальная переменная
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(261,16): warning C4101: n: неиспользованная локальная переменная
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(261,13): warning C4101: t: неиспользованная локальная переменная
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(451,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(453,23): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(479,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(682,22): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(684,88): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(684,51): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(685,88): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(685,51): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(686,88): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(686,51): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(687,88): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(687,51): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(706,23): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(709,70): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(709,45): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(710,74): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(710,45): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(717,84): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(717,44): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(718,69): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(718,44): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(730,22): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(732,89): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(732,50): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(733,90): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(733,50): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(745,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(751,47): warning C4244: аргумент: преобразование "_Ty2" в "float", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(751,21): warning C4244: аргумент: преобразование "_Ty1" в "float", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(759,23): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(776,70): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(776,45): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(777,74): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(777,45): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(784,84): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(784,44): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(785,69): warning C4244: аргумент: преобразование "_Ty2" в "T", возможна потеря данных
+          with
+          [
+              _Ty2=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(785,44): warning C4244: аргумент: преобразование "_Ty1" в "T", возможна потеря данных
+          with
+          [
+              _Ty1=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\utility(249,16): warning C4244: инициализация: преобразование "_Ty" в "_Ty1", возможна потеря данных
+          with
+          [
+              _Ty=double
+          ]
+          and
+          [
+              _Ty1=int
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\utility(249): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::pair<int,int>::pair<double,double,0>(std::pair<double,double> &&) noexcept"
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\utility(249): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::pair<int,int>::pair<double,double,0>(std::pair<double,double> &&) noexcept"
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(459): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::pair<std::pair<int,int>,std::pair<int,int>>::pair<std::pair<double,double>,std::pair<double,double>,0>(std::pair<std::pair<double,double>,std::pair<double,double>> &&) noexcept"
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(459): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::pair<std::pair<int,int>,std::pair<int,int>>::pair<std::pair<double,double>,std::pair<double,double>,0>(std::pair<std::pair<double,double>,std::pair<double,double>> &&) noexcept"
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\utility(249,61): warning C4244: инициализация: преобразование "_Ty" в "_Ty2", возможна потеря данных
+          with
+          [
+              _Ty=double
+          ]
+          and
+          [
+              _Ty2=int
+          ]
+  ConsoleApplication6.vcxproj -> C:\Users\verni\source\repos\ConsoleApplication6\Debug\ConsoleApplication6.exe

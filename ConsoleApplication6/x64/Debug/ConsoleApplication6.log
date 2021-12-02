@@ -1,0 +1,2 @@
+﻿  ConsoleApplication6.cpp
+C:\Users\verni\source\repos\ConsoleApplication6\ConsoleApplication6\ConsoleApplication6.cpp(2,10): fatal error C1083: Не удается открыть файл включение: SFML/Graphics.hpp: No such file or directory,
