@@ -21,9 +21,13 @@ vector<pair<int, int>> final;
 
 vector<pair<pair<int, int>, pair<int, int>>> final_voronoy;
 
+void drawWindow(RenderWindow* window, int key, RectangleShape* X, RectangleShape* Y);
 
 int window_x = 1000;
 int window_y = 1000;
+
+int speed = 30;
+
 struct Triangle
 {
 	pair<int, int> a;
@@ -38,7 +42,7 @@ vector<Triangle> triangle_vector;
 
 Triangle add_edges(Triangle temp) {
 	temp.edges.push_back(make_pair(make_pair(temp.a.first, temp.a.second), make_pair(temp.b.first, temp.b.second)));
-	temp.edges.push_back(make_pair(make_pair(temp.b.first, temp.b.second), make_pair(temp.c.first, temp.c.second)));	
+	temp.edges.push_back(make_pair(make_pair(temp.b.first, temp.b.second), make_pair(temp.c.first, temp.c.second)));
 	temp.edges.push_back(make_pair(make_pair(temp.c.first, temp.c.second), make_pair(temp.a.first, temp.a.second)));
 	return temp;
 }
@@ -52,7 +56,7 @@ bool operator==(Triangle a, Triangle b) {
 	else
 	{
 		return false;
-	}	
+	}
 }
 
 bool operator==(pair<int, int> a, pair<int, int> b) {
@@ -67,7 +71,7 @@ bool operator==(pair<int, int> a, pair<int, int> b) {
 }
 
 bool operator==(pair<pair<int, int>, pair<int, int>> a, pair<pair<int, int>, pair<int, int>> b) {
-	if ((a.first==b.first&&a.second==b.second)|| (a.first == b.second && a.second == b.first))
+	if ((a.first == b.first && a.second == b.second) || (a.first == b.second && a.second == b.first))
 	{
 		return true;
 	}
@@ -129,96 +133,140 @@ void to_final() {
 		final.push_back(triangle_vector[i].c);
 		final.push_back(triangle_vector[i].a);
 	}
-	
-	
+
+
 }
 
-void calculate_delaunay_triangulation() {
+void animate_delanay_step(Triangle super, vector<Triangle> badTriangles, vector<pair<pair<int, int>, pair<int, int>>> polygon, int i) {
+	//std::cout << std::endl;
+	badTriangles.clear();
+	for (int t = 0; t < triangle_vector.size(); t++)
+	{
+		/*std::cout << pairs[i].first << " " << pairs[i].second << "    "
+			<< triangle_vector[t].a.first << " " << triangle_vector[t].a.second << "    "
+			<< triangle_vector[t].b.first << " " << triangle_vector[t].b.second << "    "
+			<< triangle_vector[t].c.first << " " << triangle_vector[t].c.second << "    "
+			<< triangle_vector[t].radius << " "
+			<< triangle_vector[t].center.first << " " << triangle_vector[t].center.second << "\n";*/
+		if (segment_length(pairs[i], triangle_vector[t].center) <= triangle_vector[t].radius)
+		{
+			badTriangles.push_back(triangle_vector[t]);
+		}
+	}
+	polygon.clear();
+	for (int t = 0; t < badTriangles.size(); t++)
+	{
+		//std::cout << "triangle " << t << "\n    ";
+		for (int e = 0; e < 3; e++)
+		{
+
+			//std::cout << badTriangles[t].edges[e].first.first << " "<<badTriangles[t].edges[e].first.second << " " << badTriangles[t].edges[e].second.first << " " << badTriangles[t].edges[e].second.second << "\n";
+			bool flag = 0;
+			for (int j = 0; j < badTriangles.size(); j++)
+			{
+				if (t == j)
+				{
+					continue;
+				}
+				for (int r = 0; r < 3; r++)
+				{
+
+					if (badTriangles[t].edges[e] == badTriangles[j].edges[r])
+					{
+						//std::cout << "bad! collides with:   ";
+						//std::cout << badTriangles[j].edges[r].first.first << " " << badTriangles[j].edges[r].first.second << " " << badTriangles[j].edges[r].second.first << " " << badTriangles[j].edges[r].second.second << "\n";
+						flag = true;
+					}
+				}
+			}
+			if (!flag)
+			{
+				polygon.push_back(badTriangles[t].edges[e]);
+			}
+		}
+	}
+	//std::cout << "i=" << i << " active edges: \n";
+	for (int i = 0; i < polygon.size(); i++) {
+		//std::cout << polygon[i].first.first << " " << polygon[i].first.second << "  " << polygon[i].second.first << " " << polygon[i].second.second << "		  ";
+	}
+	for (int t = 0; t < badTriangles.size(); t++)
+	{
+		triangle_vector.erase(std::remove(triangle_vector.begin(), triangle_vector.end(), badTriangles[t]), triangle_vector.end());
+	}
+	for (int e = 0; e < polygon.size(); e++)
+	{
+		Triangle temp;
+		temp.a = polygon[e].first;
+		temp.b = polygon[e].second;
+		temp.c = pairs[i];
+		temp.center = find_center(temp);
+		temp.radius = segment_length(temp.a, temp.center);
+		temp = add_edges(temp);
+		triangle_vector.push_back(temp);
+	}
+	/*std::cout << "\n\n\n";
+	std::cout << "bad triangles\n";
+	for (int j = 0; j < badTriangles.size(); j++) {
+		std::cout << badTriangles[j].a.first << " " << badTriangles[j].a.second << " "
+			<< badTriangles[j].b.first << " " << badTriangles[j].b.second << " "
+			<< badTriangles[j].c.first << " " << badTriangles[j].c.second << "\n";
+	}
+	std::cout << "active triangles\n";
+	for (int j = 0; j < triangle_vector.size(); j++) {
+		std::cout << triangle_vector[j].a.first << " " << triangle_vector[j].a.second << " "
+			<< triangle_vector[j].b.first << " " << triangle_vector[j].b.second << " "
+			<< triangle_vector[j].c.first << " " << triangle_vector[j].c.second << "\n";
+	}
+	std::cout << "\n\n\n";*/
+}
+
+void calculate_delaunay_triangulation(RenderWindow* window, RectangleShape* X, RectangleShape* Y, bool voronoy = 0) {
 	triangle_vector.clear();
 	Triangle super;
 	super.a.first = 0;
-	super.a.second = sqrt(3 / 2) * window_x + window_x / 2;
-	super.b.first = window_x / sqrt(3 / 2) + window_y / 2;
-	super.b.second = -window_y/2;
-	super.c.first = -(window_x / sqrt(3 / 2) + window_y / 2);
-	super.c.second = -window_y / 2;
+	super.a.second = (sqrt(3 / 2) * window_x + window_x / 2) * 25;
+	super.b.first = (window_x / sqrt(3 / 2) + window_y / 2) * 25;
+	super.b.second = (-window_y / 2) * 25;
+	super.c.first = -(window_x / sqrt(3 / 2) + window_y / 2) * 25;
+	super.c.second = (-window_y / 2) * 25;
 	super.center = find_center(super);
 	super.radius = segment_length(super.center, super.a);
 	super = add_edges(super);
 	triangle_vector.push_back(super);
 	vector<Triangle> badTriangles;
-	vector<pair<pair<int,int>, pair<int, int>>> polygon;
+	vector<pair<pair<int, int>, pair<int, int>>> polygon;
 	for (int i = 0; i < pairs.size(); i++)
 	{
-		badTriangles.clear();
-		for (int t = 0; t < triangle_vector.size(); t++)
-		{
-			if (segment_length(pairs[i], triangle_vector[t].center) < triangle_vector[t].radius)
-			{
-				badTriangles.push_back(triangle_vector[t]);
-			}
-		}
-		polygon.clear();
-		for (int t = 0; t < badTriangles.size(); t++)
-		{
-			
-			for (int e = 0; e < 3; e++)
-			{
-				bool flag = 0;
-				for (int j = 0; j < badTriangles.size(); j++)
-				{
-					if (t==j)
-					{
-						continue;
-					}
-					for (int r = 0; r < 3; r++)
-					{
-
-						if (badTriangles[t].edges[e]== badTriangles[j].edges[r])
-						{
-							flag = true;
-						}
-					}			
-				}
-				if (!flag)
-				{
-					polygon.push_back(badTriangles[t].edges[e]);
-				}
-			}
-		}
-
-		for (int t = 0; t < badTriangles.size(); t++)
-		{
-			triangle_vector.erase(std::remove(triangle_vector.begin(), triangle_vector.end(), badTriangles[t]), triangle_vector.end());
-		}
-		for (int e = 0; e < polygon.size(); e++)
-		{
-			Triangle temp;
-			temp.a = polygon[e].first;
-			temp.b = polygon[e].second;
-			temp.c = pairs[i];
-			temp.center = find_center(temp);
-			temp.radius = segment_length(temp.a, temp.center);
-			temp = add_edges(temp);
-			triangle_vector.push_back(temp);
-		}
-		
+		animate_delanay_step(super, badTriangles, polygon, i);
+		Sleep(speed*2);
+		drawWindow(window, 2, X, Y);
 	}
 	vector<Triangle> to_del;
 
 	for (int i = 0; i < triangle_vector.size(); i++)
 	{
-		if ((segment_length(triangle_vector[i].a, super.center) > super.radius)||
-			(segment_length(triangle_vector[i].b, super.center) > super.radius) || 
-			(segment_length(triangle_vector[i].c, super.center) > super.radius))
+		/*if ((segment_length(triangle_vector[i].a, super.center) > super.radius) ||
+			(segment_length(triangle_vector[i].b, super.center) > super.radius) ||
+			(segment_length(triangle_vector[i].c, super.center) > super.radius))*/
+		bool flag = false;
+		for (int a = 0; a < 3; a++) {
+			for (int b = 0; b < 3; b++) {
+				if (triangle_vector[i].edges[a] == super.edges[b]) {
+					flag = true;
+				}
+			}
+		}
+
+		if (flag)
 		{
 			to_del.push_back(triangle_vector[i]);
 		}
+
 	}
-/*	for (int i = 0; i < triangle_vector.size(); i++)
+	for (int i = 0; i < triangle_vector.size(); i++)
 	{
-		if ((triangle_vector[i].a.first>500|| triangle_vector[i].a.first <-500)||
-			(triangle_vector[i].b.first > 500 || triangle_vector[i].b.first < -500) || 
+		if ((triangle_vector[i].a.first > 500 || triangle_vector[i].a.first < -500) ||
+			(triangle_vector[i].b.first > 500 || triangle_vector[i].b.first < -500) ||
 			(triangle_vector[i].c.first > 500 || triangle_vector[i].c.first < -500) ||
 			(triangle_vector[i].a.second > 500 || triangle_vector[i].a.second < -500) ||
 			(triangle_vector[i].b.second > 500 || triangle_vector[i].b.second < -500) ||
@@ -226,12 +274,25 @@ void calculate_delaunay_triangulation() {
 		{
 			to_del.push_back(triangle_vector[i]);
 		}
-	}*/
-	for (int i = 0; i < to_del.size(); i++)
-	{
-		triangle_vector.erase(std::remove(triangle_vector.begin(), triangle_vector.end(), to_del[i]), triangle_vector.end());
-
 	}
+	if (!voronoy) {
+		for (int i = 0; i < to_del.size(); i++)
+		{
+			triangle_vector.erase(std::remove(triangle_vector.begin(), triangle_vector.end(), to_del[i]), triangle_vector.end());
+			Sleep(speed/2);
+			drawWindow(window, 2, X, Y);
+
+		}
+	}
+	//Sleep(1000);
+	//std::cout << "final triangles\n";
+	/*for (int j = 0; j < triangle_vector.size(); j++) {
+		std::cout << triangle_vector[j].a.first << " " << triangle_vector[j].a.second << " "
+			<< triangle_vector[j].b.first << " " << triangle_vector[j].b.second << " "
+			<< triangle_vector[j].c.first << " " << triangle_vector[j].c.second << "\n";
+	}*/
+	//std::cout << "\n\n\n";
+	drawWindow(window, 2, X, Y);
 	to_final();
 }
 
@@ -256,13 +317,14 @@ void clean() {
 	}
 }
 
-void calculate_convex_set(){
-
-		int x, y, t, n;
+void calculate_convex_set(RenderWindow* window, RectangleShape* X, RectangleShape* Y) {
+	//ifstream in;
+	//in.open("Text.txt");
+	int x, y, t, n;
 	int j = 0;
 
 
-	
+
 	vector<int> yvV;
 	vector<int> xv;
 	vector<int> yv;
@@ -287,45 +349,45 @@ void calculate_convex_set(){
 		//cout << "\n";
 
 
-		int xend, yend;
+	int xend, yend;
+	const auto p = min_element(pairs.begin(), pairs.end(), compare);
+	auto x1 = p->first;
+	auto y1 = p->second;
+	//cout << x1 << " / " << y1 << endl;
+	//cout << "\n";
+
+	pairs.erase(remove(pairs.begin(), pairs.end(), make_pair(x1, y1)), pairs.end());
+	pairs.push_back(make_pair(x1, y1));
+	xend = x1;
+	yend = y1;
+	/*for (int i = 0; i < pairs.size(); i++)
+	{
+
+		cout << pairs.at(i).first << " / " << pairs.at(i).second << endl;
+
+	}*/
+	//cout << "\n";
+	for (int i = 0; i < pairs.size(); i++)
+	{
 		const auto p = min_element(pairs.begin(), pairs.end(), compare);
-		auto x1 = p->first;
-		auto y1 = p->second;
-		//cout << x1 << " / " << y1 << endl;
-		//cout << "\n";
+		auto x2 = p->first;
+		auto y2 = p->second;
 
-		pairs.erase(remove(pairs.begin(), pairs.end(), make_pair(x1, y1)), pairs.end());
-		pairs.push_back(make_pair(x1, y1));
-		xend = x1;
-		yend = y1;
-		/*for (int i = 0; i < pairs.size(); i++)
+
+		if (y2 == y1)
 		{
-
-			cout << pairs.at(i).first << " / " << pairs.at(i).second << endl;
-
-		}*/
-		//cout << "\n";
-		for (int i = 0; i < pairs.size(); i++)
-		{
-			const auto p = min_element(pairs.begin(), pairs.end(), compare);
-			auto x2 = p->first;
-			auto y2 = p->second;
-
-
-			if (y2 == y1)
+			if (x2 < x1)
 			{
-				if (x2 < x1)
-				{
-					pairs.erase(remove(pairs.begin(), pairs.end(), make_pair(x2, y2)), pairs.end());
-					pairs.push_back(make_pair(x2, y2));
-					//cout << x2 << " / " << y2 << endl;
-					//cout << "\n";
-					xend = x2;
-					yend = y2;
-				}
+				pairs.erase(remove(pairs.begin(), pairs.end(), make_pair(x2, y2)), pairs.end());
+				pairs.push_back(make_pair(x2, y2));
+				//cout << x2 << " / " << y2 << endl;
+				//cout << "\n";
+				xend = x2;
+				yend = y2;
 			}
-
 		}
+
+	}
 	//	cout << "\n";
 	/*	for (int i = 0; i < pairs.size(); i++)
 		{
@@ -333,135 +395,279 @@ void calculate_convex_set(){
 			cout << pairs.at(i).first << " / " << pairs.at(i).second << endl;
 
 		}*/
-	//	cout << "\n";
-		//cout << xend << " / " << yend << endl;
-		pairs.pop_back();
+		//	cout << "\n";
+			//cout << xend << " / " << yend << endl;
+	pairs.pop_back();
 
 
-		int xx1, yy1;
+	int xx1, yy1;
 
 
 
-		double sign;
-		vector<float> cosinus1;
-		for (int i = 0; i < pairs.size(); i++)
-			if (pairs.at(i).first != xend || pairs.at(i).second != yend)
-			{
-				sign = area_triangle(xend - 1, yend, xend, yend, pairs.at(i).first, pairs.at(i).second);
+	double sign;
+	vector<float> cosinus1;
+	for (int i = 0; i < pairs.size(); i++)
+		if (pairs.at(i).first != xend || pairs.at(i).second != yend)
+		{
+			sign = area_triangle(xend - 1, yend, xend, yend, pairs.at(i).first, pairs.at(i).second);
 
-				if (pairs.at(i).first != xend && pairs.at(i).second != yend && sign > 0) {
-					cosinus1.push_back(sign);
-				}
-
-
+			if (pairs.at(i).first != xend && pairs.at(i).second != yend && sign > 0) {
+				cosinus1.push_back(sign);
 			}
 
-	//	cout << "\n";
 
-		const auto css = max_element(cosinus1.begin(), cosinus1.end());
-
-		int num1 = distance(cosinus1.begin(), css);
-		xx1 = pairs.at(num1).first;
-		yy1 = pairs.at(num1).second;
+		}
 
 	//	cout << "\n";
+
+	const auto css = max_element(cosinus1.begin(), cosinus1.end());
+
+	int num1 = distance(cosinus1.begin(), css);
+	xx1 = pairs.at(num1).first;
+	yy1 = pairs.at(num1).second;
+
+	//	cout << "\n";
 	//	cout << "\n";
 	//	cout << "\n";
 
-		pairs.erase(remove(pairs.begin(), pairs.end(), make_pair(xx1, yy1)), pairs.end());
+	pairs.erase(remove(pairs.begin(), pairs.end(), make_pair(xx1, yy1)), pairs.end());
 
 	//	cout << xx1 << " / " << yy1 << endl;
 
-		final.push_back(make_pair(xend, yend));
-		final.push_back(make_pair(xx1, yy1));
-		pairs.push_back(make_pair(xend, yend));
+	final.push_back(make_pair(xend, yend));
+	final.push_back(make_pair(xx1, yy1));
+	pairs.push_back(make_pair(xend, yend));
 
-		double ax = xend;
-		double ay = yend;
-		double bx = xx1;
-		double by = yy1;
+	double ax = xend;
+	double ay = yend;
+	double bx = xx1;
+	double by = yy1;
 
-		while (true)
+	while (true)
+	{
+		Sleep(speed);
+		drawWindow(window, 1, X, Y);
+		vector<float> cosinus;
+		for (int i = 0; i < pairs.size(); i++)
 		{
-			vector<float> cosinus;
-			for (int i = 0; i < pairs.size(); i++)
-			{
-				double  cx = pairs.at(i).first;
-				double  cy = pairs.at(i).second;
-				double cosss = area_triangle(ax, ay, bx, by, cx, cy);
-				cosinus.push_back(cosss);
-
-			}
-
-			//cout << "\n";
-
-			const auto cs = max_element(cosinus.begin(), cosinus.end());
-
-			int num = distance(cosinus.begin(), cs);
-
-			ax = bx;
-			ay = by;
-			bx = pairs.at(num).first;
-			by = pairs.at(num).second;
-			//cout << pairs.at(num).first << " / " << pairs.at(num).second << endl;
-			//cout << "\n";
-			if (pairs.at(num).first == xend && pairs.at(num).second == yend)
-			{
-				goto end;
-			}
-
-			final.push_back(make_pair(pairs.at(num).first, pairs.at(num).second));
-			pairs.erase(pairs.begin() + num);
-
-			cosinus.clear();
+			double  cx = pairs.at(i).first;
+			double  cy = pairs.at(i).second;
+			double cosss = area_triangle(ax, ay, bx, by, cx, cy);
+			cosinus.push_back(cosss);
 
 		}
 
-	end:;
-
-		final.push_back(make_pair(xend, yend));
 		//cout << "\n";
-		/*for (int i = 0; i < pairs.size(); i++)
+
+		const auto cs = max_element(cosinus.begin(), cosinus.end());
+
+		int num = distance(cosinus.begin(), cs);
+
+		ax = bx;
+		ay = by;
+		bx = pairs.at(num).first;
+		by = pairs.at(num).second;
+		//cout << pairs.at(num).first << " / " << pairs.at(num).second << endl;
+		//cout << "\n";
+		if (pairs.at(num).first == xend && pairs.at(num).second == yend)
 		{
-
-			cout << pairs.at(i).first << " / " << pairs.at(i).second << endl;
-
+			break;
+			//goto end;
 		}
-		cout << "\n";
 
-		for (int i = 0; i < final.size(); i++)
-		{
+		final.push_back(make_pair(pairs.at(num).first, pairs.at(num).second));
+		pairs.erase(pairs.begin() + num);
 
-			cout << final.at(i).first << " / " << final.at(i).second << endl;
+		cosinus.clear();
 
-		}*/
+	}
+
+	//end:;
+
+	final.push_back(make_pair(xend, yend));
+	//cout << "\n";
+	/*for (int i = 0; i < pairs.size(); i++)
+	{
+
+		cout << pairs.at(i).first << " / " << pairs.at(i).second << endl;
+
+	}
+	cout << "\n";
+
+	for (int i = 0; i < final.size(); i++)
+	{
+
+		cout << final.at(i).first << " / " << final.at(i).second << endl;
+
+	}*/
 
 }
 
-void calculate_voronoi_diagram() {
+void calculate_voronoi_diagram(RenderWindow* window, RectangleShape* X, RectangleShape* Y) {
 	final.clear();
 	pairs.clear();
 	pairs2.clear();
 	pairs = pairs_orig;
 	pairs2 = pairs_orig;
-	calculate_delaunay_triangulation();//triangle_vector
+	calculate_delaunay_triangulation(window, X, Y, 1);//triangle_vector
 	//final_voronoy
 
 	final_voronoy.clear();
+	//for (int j = 0; j < triangle_vector.size(); j++) {
+		//std::cout << "triangle " << j << "\n";
+		//std::cout << triangle_vector[j].a.first << " " << triangle_vector[j].a.second << " "
+			//<< triangle_vector[j].b.first << " " << triangle_vector[j].b.second << " "
+			//<< triangle_vector[j].c.first << " " << triangle_vector[j].c.second << "\n";
+		//for (int e = 0; e < 3; e++)
+		//{
+
+		//	//std::cout << triangle_vector[j].edges[e].first.first << " " << triangle_vector[j].edges[e].first.second << " " << triangle_vector[j].edges[e].second.first << " " << triangle_vector[j].edges[e].second.second << "\n";
+		//}
+		//std::cout << "center " << triangle_vector[j].center.first << " " << triangle_vector[j].center.second << "\n";
+	//}
 	for (int i = 0; i < triangle_vector.size(); i++)
 	{
-		for (int j = i+1; j < triangle_vector.size(); j++)
+		for (int j = i + 1; j < triangle_vector.size(); j++)
 		{
 			for (int k = 0; k < 3; k++)
 			{
-				if (triangle_vector[i].edges[k] == triangle_vector[j].edges[0]|| triangle_vector[i].edges[k] == triangle_vector[j].edges[1] || triangle_vector[i].edges[k] == triangle_vector[j].edges[2])
+				if (triangle_vector[i].edges[k] == triangle_vector[j].edges[0] || triangle_vector[i].edges[k] == triangle_vector[j].edges[1] || triangle_vector[i].edges[k] == triangle_vector[j].edges[2])
 				{
 					final_voronoy.push_back(make_pair(triangle_vector[i].center, triangle_vector[j].center));
+					Sleep(speed);
+					drawWindow(window, 3, X, Y);
 				}
 			}
 		}
 	}
+	//for (auto elem : final_voronoy) {
+		//std::cout << elem.first.first << " " << elem.first.second << " " << elem.second.first << " " << elem.second.second << "\n";
+//	}
+	//std::cout << "\n";
+	drawWindow(window, 3, X, Y);
 }
+
+void drawWindow(RenderWindow* window, int key, RectangleShape* X, RectangleShape* Y) {
+	window->clear(Color(10, 25, 40, 0));
+	Vertex background[] =
+	{
+			Vertex(Vector2f(0, 0), Color(159, 226, 255)),
+			Vertex(Vector2f(0, 1000),  Color(255, 185, 185)),
+			Vertex(Vector2f(1000, 1000), Color(255, 226, 255)),
+			Vertex(Vector2f(1000, 0), Color(90, 255, 255))
+	};
+	window->draw(background, 4, sf::Quads);
+	VertexArray lines(sf::LinesStrip, final.size());
+	VertexArray lines_for_triangle(sf::LinesStrip, 4);
+	if (key == 2)
+	{
+		for (int i = 0; i < triangle_vector.size(); i++)
+		{
+			lines_for_triangle[0].position = Vector2f(500 + triangle_vector.at(i).a.first, 500 - triangle_vector.at(i).a.second);
+			lines_for_triangle[1].position = Vector2f(500 + triangle_vector.at(i).b.first, 500 - triangle_vector.at(i).b.second);
+			lines_for_triangle[2].position = Vector2f(500 + triangle_vector.at(i).c.first, 500 - triangle_vector.at(i).c.second);
+			lines_for_triangle[3].position = Vector2f(500 + triangle_vector.at(i).a.first, 500 - triangle_vector.at(i).a.second);
+
+			lines_for_triangle[0].color = Color(10, 25, 40);
+			lines_for_triangle[1].color = Color(10, 25, 40);
+			lines_for_triangle[2].color = Color(10, 25, 40);
+			lines_for_triangle[3].color = Color(10, 25, 40);
+
+			window->draw(lines_for_triangle);
+
+		}
+	}
+	VertexArray lines_for_voronoy(sf::LinesStrip, 2);
+
+	if (key == 3)
+	{
+		for (int i = 0; i < final_voronoy.size(); i++)
+		{
+			lines_for_voronoy[0].position = Vector2f(500 + final_voronoy.at(i).first.first, 500 - final_voronoy.at(i).first.second);
+			lines_for_voronoy[1].position = Vector2f(500 + final_voronoy.at(i).second.first, 500 - final_voronoy.at(i).second.second);
+
+			lines_for_voronoy[0].color = Color(255, 0, 0);
+			lines_for_voronoy[1].color = Color(255, 0, 0);
+
+			window->draw(lines_for_voronoy);
+
+		}
+	}
+
+	sf::ConvexShape convex;
+	convex.setPointCount(final.size());
+	for (int i = 0; i < pairs2.size(); i++)
+	{
+
+		CircleShape circle3(5.f);
+		circle3.setOrigin(5, 5);
+		circle3.setFillColor(Color(44, 110, 176));
+		circle3.move(500 + pairs2.at(i).first, 500 - pairs2.at(i).second);
+		window->draw(circle3);
+	}
+	VertexArray lines_for_1(sf::LinesStrip, 2);
+	if (key == 1)
+	{
+		if (final.size() > 2)
+		{
+			for (int i = 0; i < final.size() - 1; i++)
+			{
+				/*float xxx = 500 + final.at(i).first;
+				float yyy = 500 - final.at(i).second;
+				convex.setPoint(i, sf::Vector2f(500 + final.at(i).first, 500 - final.at(i).second));
+				convex.setFillColor(sf::Color(255, 255, 255, 0));
+				convex.setOutlineThickness(3);
+				convex.setOutlineColor(sf::Color(10, 25, 40));
+				lines[i].position = Vector2f(500 + final.at(i).first, 500 - final.at(i).second);
+
+				lines[i].color = Color(10, 25, 40);
+				CircleShape circle2(7.f);
+				circle2.setOrigin(7, 7);
+				circle2.setFillColor(Color(10, 25, 40));
+				circle2.move(500 + final.at(i).first, 500 - final.at(i).second);
+				window.draw(circle2);*/
+
+				lines_for_1[0].position = Vector2f(500 + final.at(i).first, 500 - final.at(i).second);
+				lines_for_1[1].position = Vector2f(500 + final.at(i + 1).first, 500 - final.at(i + 1).second);
+
+				lines_for_1[0].color = Color(10, 25, 40);
+				lines_for_1[1].color = Color(10, 25, 40);
+
+				window->draw(lines_for_1);
+			}
+			lines_for_1[0].position = Vector2f(500 + final.at(final.size() - 1).first, 500 - final.at(final.size() - 1).second);
+			lines_for_1[1].position = Vector2f(500 + final.at(0).first, 500 - final.at(0).second);
+
+			lines_for_1[0].color = Color(10, 25, 40);
+			lines_for_1[1].color = Color(10, 25, 40);
+
+			window->draw(lines_for_1);
+		}
+	}
+	/*
+	for (int i = 0; i < triangle_vector.size(); i++)
+	{
+					ConvexShape convex1;
+		convex1.setPointCount(3);
+		convex1.setPoint(0, Vector2f(500 + triangle_vector.at(i).a.first, 500 - triangle_vector.at(i).a.second));
+		convex1.setPoint(1, Vector2f(500 + triangle_vector.at(i).b.first, 500 - triangle_vector.at(i).b.second));
+		convex1.setPoint(2, Vector2f(500 + triangle_vector.at(i).c.first, 500 - triangle_vector.at(i).c.second));
+		convex1.setOutlineThickness(3.f);
+		convex1.setFillColor(Color(0,0,0,0));
+		convex1.setOutlineColor(Color(44, 110, 176));
+		window.draw(convex1);
+	}*/
+
+
+
+	//window.draw(lines);
+	window->draw(convex);
+	window->draw(*Y);
+	window->draw(*X);
+
+	window->display();
+}
+
 
 void random() {
 	pairs_orig.clear();
@@ -482,8 +688,10 @@ int main()
 		<< "Press '2' to show Delaunay triangulation." << endl
 		<< "Press '3' to show Voronoi diagram." << endl
 		<< "Press 'R' to randomize numbers." << endl
-		<< "Press 'F' to read numbers from file." << endl;
-
+		<< "Press 'F' to read numbers from file." << endl
+		<< "Press '+' to increase speed." << endl
+		<< "Press '-' to reduce speed." << endl
+		<< "Press '0' to make speed approximately equal to 0." << endl;
 
 
 	RenderWindow window(VideoMode(window_x, window_y), "SFML Works!");
@@ -501,7 +709,13 @@ int main()
 	X.setFillColor(Color(10, 25, 40));
 	X.move(0, 500);
 
-	int key=1;
+	int key = 1;
+
+	/*pairs_orig.push_back(std::pair<int, int>(-300, -300));
+	pairs_orig.push_back(std::pair<int, int>(-300, 200));
+	pairs_orig.push_back(std::pair<int, int>(200, -300));
+	pairs_orig.push_back(std::pair<int, int>(200, 200));
+	pairs_orig.push_back(std::pair<int, int>(50, 180));*/
 
 	while (window.isOpen())
 	{
@@ -527,9 +741,9 @@ int main()
 						pairs2.clear();
 						pairs = pairs_orig;
 						pairs2 = pairs_orig;
-						calculate_convex_set();
+						calculate_convex_set(&window, &X, &Y);
 					}
-					
+
 				}
 				if (event.key.code == sf::Keyboard::Num2)
 				{
@@ -541,7 +755,7 @@ int main()
 						pairs2.clear();
 						pairs = pairs_orig;
 						pairs2 = pairs_orig;
-						calculate_delaunay_triangulation();
+						calculate_delaunay_triangulation(&window, &X, &Y);
 						clean();
 					}
 				}
@@ -555,9 +769,9 @@ int main()
 						pairs2.clear();
 						pairs = pairs_orig;
 						pairs2 = pairs_orig;
-						calculate_voronoi_diagram();
+						calculate_voronoi_diagram(&window, &X, &Y);
 					}
-					
+
 				}
 				if (event.key.code == sf::Keyboard::R)
 				{
@@ -570,16 +784,16 @@ int main()
 					pairs2 = pairs_orig;
 					if (key == 1)
 					{
-						calculate_convex_set();
+						calculate_convex_set(&window, &X, &Y);
 					}
 					if (key == 2)
 					{
-						calculate_delaunay_triangulation();
+						calculate_delaunay_triangulation(&window, &X, &Y);
 						clean();
 					}
 					if (key == 3)
 					{
-						calculate_voronoi_diagram();
+						calculate_voronoi_diagram(&window, &X, &Y);
 					}
 
 				}
@@ -602,47 +816,68 @@ int main()
 					pairs2 = pairs_orig;
 					if (key == 1)
 					{
-						calculate_convex_set();
+						calculate_convex_set(&window, &X, &Y);
 					}
 					if (key == 2)
 					{
-						calculate_delaunay_triangulation();
+						calculate_delaunay_triangulation(&window, &X, &Y);
 						clean();
 					}
 					if (key == 3)
 					{
-						calculate_voronoi_diagram();
+						calculate_voronoi_diagram(&window, &X, &Y);
 					}
 
 				}
+				if (event.key.code == sf::Keyboard::Equal)
+				{
+					speed += 30;
+				}
+				if (event.key.code == sf::Keyboard::Num0)
+				{
+					speed = 0;
+				}
+				if (event.key.code == sf::Keyboard::Dash)
+				{
+					if (speed>35)
+					{
+						speed -= 30;
+					}
+					else
+					{
+						speed = 0;
+
+					}
 				
+				}
+
 			}
 
 			if (event.type == event.MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
-				
-				pairs_orig.push_back(make_pair(Mouse::getPosition(window).x-500, -(Mouse::getPosition(window).y-500)));
-				
-				//cout << pairs_orig[pairs_orig.size()-1].first << "/" << pairs_orig[pairs_orig.size() - 1].second << endl;
-				
-				if (pairs_orig.size()>3)
+
+				pairs_orig.push_back(make_pair(Mouse::getPosition(window).x - 500, -(Mouse::getPosition(window).y - 500)));
+
+				//cout << pairs_orig[pairs_orig.size() - 1].first << "/" << pairs_orig[pairs_orig.size() - 1].second << endl;
+
+				if (pairs_orig.size() > 3)
 				{
 					final.clear();
 					pairs.clear();
 					pairs2.clear();
 					pairs = pairs_orig;
 					pairs2 = pairs_orig;
-					if (key==1)
+					if (key == 1)
 					{
-						calculate_convex_set();
+						calculate_convex_set(&window, &X, &Y);
 					}
-					if (key==2)
+					if (key == 2)
 					{
-						calculate_delaunay_triangulation();
+						calculate_delaunay_triangulation(&window, &X, &Y);
 						clean();
 					}
 					if (key == 3)
 					{
-						calculate_voronoi_diagram();
+						calculate_voronoi_diagram(&window, &X, &Y);
 					}
 					if (key == 0)
 					{
@@ -664,154 +899,7 @@ int main()
 
 				window.close();
 		}
-		window.clear(Color(10, 25, 40, 0));
-		Vertex background[] =
-		{
-				Vertex(Vector2f(0, 0), Color(159, 226, 255)),
-				Vertex(Vector2f(0, 1000),  Color(255, 185, 185)),
-				Vertex(Vector2f(1000, 1000), Color(255, 226, 255)),
-				Vertex(Vector2f(1000, 0), Color(90, 255, 255))
-		};
-		window.draw(background, 4, sf::Quads);
-		VertexArray lines(sf::LinesStrip, final.size());
-		VertexArray lines_for_triangle(sf::LinesStrip, 4);
-		VertexArray lines_for_voronoy(sf::LinesStrip, 2);
-		VertexArray lines_for_1(sf::LinesStrip, 2);
-		if (key == 2)
-		{
-			for (int i = 0; i < triangle_vector.size(); i++)
-			{
-				lines_for_triangle[0].position = Vector2f(500 + triangle_vector.at(i).a.first, 500 - triangle_vector.at(i).a.second);
-				lines_for_triangle[1].position = Vector2f(500 + triangle_vector.at(i).b.first, 500 - triangle_vector.at(i).b.second);
-				lines_for_triangle[2].position = Vector2f(500 + triangle_vector.at(i).c.first, 500 - triangle_vector.at(i).c.second);
-				lines_for_triangle[3].position = Vector2f(500 + triangle_vector.at(i).a.first, 500 - triangle_vector.at(i).a.second);
-
-				lines_for_triangle[0].color = Color(10, 25, 40);
-				lines_for_triangle[1].color = Color(10, 25, 40);
-				lines_for_triangle[2].color = Color(10, 25, 40);
-				lines_for_triangle[3].color = Color(10, 25, 40);
-
-				window.draw(lines_for_triangle);
-
-			}
-
-			final.clear();
-			pairs.clear();
-			pairs2.clear();
-			pairs = pairs_orig;
-			pairs2 = pairs_orig;
-			calculate_convex_set();
-			if (final.size() > 2)
-			{
-				for (int i = 0; i < final.size() - 1; i++)
-				{
-
-					lines_for_1[0].position = Vector2f(500 + final.at(i).first, 500 - final.at(i).second);
-					lines_for_1[1].position = Vector2f(500 + final.at(i + 1).first, 500 - final.at(i + 1).second);
-
-					lines_for_1[0].color = Color(10, 25, 40);
-					lines_for_1[1].color = Color(10, 25, 40);
-
-					window.draw(lines_for_1);
-				}
-				lines_for_1[0].position = Vector2f(500 + final.at(final.size() - 1).first, 500 - final.at(final.size() - 1).second);
-				lines_for_1[1].position = Vector2f(500 + final.at(0).first, 500 - final.at(0).second);
-
-				lines_for_1[0].color = Color(10, 25, 40);
-				lines_for_1[1].color = Color(10, 25, 40);
-
-				window.draw(lines_for_1);
-			}
-
-		}
-		
-		if (key == 3)
-		{
-			for (int i = 0; i < final_voronoy.size(); i++)
-			{
-				lines_for_voronoy[0].position = Vector2f(500 + final_voronoy.at(i).first.first, 500 - final_voronoy.at(i).first.second);
-				lines_for_voronoy[1].position = Vector2f(500 + final_voronoy.at(i).second.first, 500 - final_voronoy.at(i).second.second);
-
-				lines_for_voronoy[0].color = Color(255, 0, 0);
-				lines_for_voronoy[1].color = Color(255, 0, 0);
-
-				window.draw(lines_for_voronoy);
-
-			}
-		}
-		
-		sf::ConvexShape convex;
-		convex.setPointCount(final.size());
-		for (int i = 0; i < pairs2.size(); i++)
-		{
-
-			CircleShape circle3(5.f);
-			circle3.setOrigin(5, 5);
-			circle3.setFillColor(Color(44, 110, 176));
-			circle3.move(500 + pairs2.at(i).first, 500 - pairs2.at(i).second);
-			window.draw(circle3);
-		}
-		
-		if (key == 1)
-		{
-			if (final.size() > 2)
-			{
-				for (int i = 0; i < final.size() - 1; i++)
-				{
-					/*float xxx = 500 + final.at(i).first;
-					float yyy = 500 - final.at(i).second;
-					convex.setPoint(i, sf::Vector2f(500 + final.at(i).first, 500 - final.at(i).second));
-					convex.setFillColor(sf::Color(255, 255, 255, 0));
-					convex.setOutlineThickness(3);
-					convex.setOutlineColor(sf::Color(10, 25, 40));
-					lines[i].position = Vector2f(500 + final.at(i).first, 500 - final.at(i).second);
-
-					lines[i].color = Color(10, 25, 40);
-					CircleShape circle2(7.f);
-					circle2.setOrigin(7, 7);
-					circle2.setFillColor(Color(10, 25, 40));
-					circle2.move(500 + final.at(i).first, 500 - final.at(i).second);
-					window.draw(circle2);*/
-
-					lines_for_1[0].position = Vector2f(500 + final.at(i).first, 500 - final.at(i).second);
-					lines_for_1[1].position = Vector2f(500 + final.at(i + 1).first, 500 - final.at(i + 1).second);
-
-					lines_for_1[0].color = Color(10, 25, 40);
-					lines_for_1[1].color = Color(10, 25, 40);					
-
-					window.draw(lines_for_1);
-				}
-				lines_for_1[0].position = Vector2f(500 + final.at(final.size() - 1).first, 500 - final.at(final.size() - 1).second);
-				lines_for_1[1].position = Vector2f(500 + final.at(0).first, 500 - final.at(0).second);
-
-				lines_for_1[0].color = Color(10, 25, 40);
-				lines_for_1[1].color = Color(10, 25, 40);
-
-				window.draw(lines_for_1);
-			}
-		}
-		/*
-		for (int i = 0; i < triangle_vector.size(); i++)
-		{
-						ConvexShape convex1;
-			convex1.setPointCount(3);
-			convex1.setPoint(0, Vector2f(500 + triangle_vector.at(i).a.first, 500 - triangle_vector.at(i).a.second));
-			convex1.setPoint(1, Vector2f(500 + triangle_vector.at(i).b.first, 500 - triangle_vector.at(i).b.second));
-			convex1.setPoint(2, Vector2f(500 + triangle_vector.at(i).c.first, 500 - triangle_vector.at(i).c.second));
-			convex1.setOutlineThickness(3.f);
-			convex1.setFillColor(Color(0,0,0,0));
-			convex1.setOutlineColor(Color(44, 110, 176));
-			window.draw(convex1);
-		}*/
-		
-
-
-		//window.draw(lines);
-		window.draw(convex);
-		window.draw(Y);
-		window.draw(X);
-
-		window.display();
+		drawWindow(&window, key, &X, &Y);
 	}
 
 	return 0;
